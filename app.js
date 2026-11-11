@@ -111,4 +111,15 @@ $('verres1').onclick=verResultados;$('verres2').onclick=verResultados;
 $('back2').onclick=()=>openTema(tema.id);
 $('tab-rec').onclick=()=>{resMode='rec';$('tab-rec').classList.add('on');$('tab-top').classList.remove('on');pintar()};
 $('tab-top').onclick=()=>{resMode='top';$('tab-top').classList.add('on');$('tab-rec').classList.remove('on');pintar()};
-home();
+/* ---------- Temas desde la base de datos (si falla, usa temas.js) ---------- */
+async function cargarTemas(){
+  try{
+    const r=await fetch(SUPA.url+'/rest/v1/altar_temas?select=datos&publicado=eq.true&order=orden.desc&limit=50',{headers:{apikey:SUPA.key,Authorization:'Bearer '+SUPA.key}});
+    if(!r.ok)throw 0;
+    const rows=await r.json();
+    const t=rows.map(x=>x.datos).filter(x=>x&&x.id&&x.preguntas&&x.preguntas.length);
+    if(t.length)window.TEMAS=t;
+  }catch(e){}
+  home();
+}
+cargarTemas();

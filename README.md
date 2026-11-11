@@ -1,17 +1,23 @@
 # Altar Familiar · Familia Echeverry (Mentalidad Cristo)
 
-Sitio estático (sin build) con el quiz de cada tema del altar familiar.
+Sitio estático (sin build). El CONTENIDO (temas, versículos, preguntas) vive en la base de datos Supabase, tabla `altar_temas`, así se edita sin volver a subir archivos. `temas.js` es solo un respaldo si la base no responde.
 
-## Archivos
-- `temas.js`  → TODO el contenido: temas, versículos y preguntas. Es lo único que se edita normalmente.
-- `index.html`, `estilos.css`, `app.js` → diseño y lógica (no hace falta tocarlos).
-- `logo.png`  → logo de Mentalidad Cristo.
+## Para Claude: agregar o editar un tema (sin tocar GitHub)
+1. Abrir el SQL Editor del proyecto Supabase `gcoshqflzgxeqhkfapdl` en Chrome:
+   https://supabase.com/dashboard/project/gcoshqflzgxeqhkfapdl/sql/new
+2. Nuevo tema (el de `orden` MÁS ALTO es el "tema del mes"):
+   `insert into public.altar_temas (id, orden, datos) values ('mi-tema', 2, $j${...json del tema...}$j$::jsonb);`
+3. Editar uno existente: `update public.altar_temas set datos = $j${...}$j$::jsonb where id = 'unidos-a-el';`
+4. Ocultar un tema: `update public.altar_temas set publicado = false where id = '...';`
+5. Cambia en el sitio al instante (sin deploy).
 
-## Para Claude: cómo agregar el tema nuevo cada mes
-1. Abre `temas.js` y agrega un objeto NUEVO AL PRINCIPIO del arreglo `TEMAS` (el primero es el "tema del mes").
-2. Campos: `id` (sin espacios), `titulo`, `mes`, `enfoque`, `versiculo`, `referencia`, `resumen`, `preguntas`.
-3. Cada pregunta: `q` (texto), `o` (4 opciones), `a` (índice de la correcta, empezando en 0), `h` (pista, opcional), `e` (explicación).
-4. Haz commit a `main`: Vercel despliega solo en ~30 segundos.
+### Formato de `datos` (JSON)
+{ "id": "mi-tema", "titulo": "...", "mes": "11 Noviembre 2026", "enfoque": "...", "versiculo": "...", "referencia": "Juan 15:4-5 · RVR1960", "resumen": "...",
+  "preguntas": [ { "q": "pregunta", "o": ["op0","op1","op2","op3"], "a": 0, "h": "pista", "e": "explicación" } ] }
+(`a` = índice de la opción correcta, empezando en 0. El `id` del JSON debe ser igual a la columna `id`.)
 
-## Deploy
-Vercel → Add New Project → importar este repo → Framework Preset "Other" → Deploy.
+## Resultados
+Tabla `altar_resultados` (tema, nombre, puntos, total, creado). Se ven en el botón "Ver resultados" del sitio.
+
+## Código (rara vez se toca)
+`index.html`, `estilos.css`, `app.js`, `temas.js` (respaldo + config SUPA), `logo.png`, `vercel.json`. Cambios de diseño sí requieren subir archivos a GitHub (Vercel despliega solo).
