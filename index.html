@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0d0a08">
+<title>Altar Familiar · Familia Echeverry</title>
+<meta name="description" content="Altar Familiar de la Familia Echeverry · Mentalidad Cristo">
+<link rel="icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=Pinyon+Script&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+<div id="app">
+  <div class="brand" id="brand"><img src="logo.png" alt="Mentalidad Cristo"><span>Mentalidad Cristo</span></div>
+
+  <!-- INICIO -->
+  <section id="s-home" class="screen on">
+    <div class="hero">
+      <p class="kicker">Mentalidad Cristo</p>
+      <p class="script">Altar Familiar</p>
+      <h1 id="fam"></h1>
+      <p class="lead">Un momento al día para estar unidos a Él. Escoge el tema y juega el quiz en familia.</p>
+      <p class="label">Tema del mes</p>
+      <div id="actual"></div>
+      <div id="anteriores"></div>
+    </div>
+  </section>
+
+  <!-- TEMA -->
+  <section id="s-tema" class="screen">
+    <button class="back" id="back1">← Altar Familiar</button>
+    <div class="hero">
+      <p class="kicker" id="t-meta"></p>
+      <h1 class="h1s" id="t-titulo"></h1>
+      <div class="verse2"><span id="t-verso"></span><b id="t-ref"></b></div>
+      <input id="name" type="text" placeholder="Tu nombre" maxlength="24" autocomplete="given-name">
+      <button class="btn" id="go">Empezar el quiz</button>
+      <p class="last" id="last"></p>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="s-quiz" class="screen">
+    <div class="top"><span id="who"></span><span id="count"></span></div>
+    <div class="bar"><i id="prog"></i></div>
+    <h2 class="q" id="q"></h2>
+    <div class="opts" id="opts"></div>
+    <button class="hintbtn" id="hintbtn">💡 Ver pista</button>
+    <p class="hint" id="hint"></p>
+    <div class="fb" id="fb"></div>
+    <button class="btn next" id="next">Siguiente</button>
+  </section>
+
+  <!-- RESULTADO -->
+  <section id="s-end" class="screen">
+    <div class="hero">
+      <p class="kicker" id="endwho"></p>
+      <div class="score"><span id="pts">0</span><small id="tot">/5</small></div>
+      <p class="msg" id="msg"></p>
+      <p class="verse" id="endverse"></p>
+      <button class="btn" id="share">Compartir con la familia</button>
+      <button class="btn ghost" id="again">Jugar de nuevo</button>
+      <button class="btn ghost" id="home">Volver al inicio</button>
+    </div>
+  </section>
+  <p class="foot" id="foot"></p>
+</div>
+<script src="temas.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
