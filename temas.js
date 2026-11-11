@@ -6,11 +6,14 @@
 // ============================================================
 window.FAMILIA = "Familia Echeverry";
 
+// Base de datos compartida (Supabase) donde se guardan los resultados.
+window.SUPA = { url: "https://gcoshqflzgxeqhkfapdl.supabase.co", key: "sb_publishable_hX-enCgeCprPpMXScve7mg_aETX5mXC", tabla: "altar_resultados" };
+
 window.TEMAS = [
   {
     id: "unidos-a-el",
     titulo: "Unidos a Él",
-    mes: "Noviembre 2026",
+    mes: "11 Noviembre 2026",
     enfoque: "Unidad",
     versiculo: "Permaneced en mí, y yo en vosotros. Como el pámpano no puede llevar fruto por sí mismo, si no permanece en la vid, así tampoco vosotros, si no permanecéis en mí. Yo soy la vid, vosotros los pámpanos; el que permanece en mí, y yo en él, éste lleva mucho fruto; porque separados de mí nada podéis hacer.",
     referencia: "Juan 15:4-5 · RVR1960",

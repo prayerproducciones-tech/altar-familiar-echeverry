@@ -53,3 +53,16 @@ input:focus{border-color:var(--red)}
 .msg{text-align:center;font-size:19px;line-height:1.45;margin:10px 0 8px}
 .verse{text-align:center;color:var(--amber);font-size:15px;line-height:1.5;margin:14px 8px 26px}
 .foot{text-align:center;color:#8d7f6b;font-size:12px;margin-top:22px;letter-spacing:1px;text-transform:uppercase}
+
+.saved{text-align:center;color:var(--muted);font-size:13.5px;min-height:18px;margin:-8px 0 4px}
+.tabs{display:flex;gap:8px;margin:6px 0 12px}
+.tab{flex:1;padding:11px;border-radius:12px;border:2px solid #3a2e24;background:transparent;color:var(--muted);font:700 14px 'Inter',sans-serif;cursor:pointer}
+.tab.on{border-color:var(--red);color:var(--cream);background:#2b0f0b}
+.resum{color:var(--muted);font-size:14px;margin-bottom:12px}
+.row{display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:14px;background:var(--card);border:1px solid #2e241b;margin-bottom:9px}
+.row .pos{font-family:'Anton',sans-serif;font-size:20px;color:var(--amber);width:26px;text-align:center}
+.row .nm{flex:1;font-weight:700;font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .nm small{display:block;font-weight:500;color:var(--muted);font-size:12px;margin-top:2px}
+.row .sc{font-family:'Anton',sans-serif;font-size:26px;color:var(--red)}
+.row .sc small{font-size:15px;color:var(--cream)}
+.empty{color:var(--muted);text-align:center;padding:28px 10px;line-height:1.5}

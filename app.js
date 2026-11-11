@@ -1,12 +1,12 @@
 const $=id=>document.getElementById(id);
 const esc=t=>{const d=document.createElement('div');d.textContent=t;return d.innerHTML};
 const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-let tema=null,i=0,pts=0,name=store.get('nombre',''),done=false;
+let tema=null,i=0,pts=0,name='',done=false,resMode='rec';
 
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));$(id).classList.add('on');window.scrollTo(0,0)}
 
 function cardHTML(t,main){
-  return `<button class="card ${main?'main':''}" data-id="${esc(t.id)}"><small>${esc(t.mes)} · ${esc(t.enfoque)}</small><strong>${esc(t.titulo)}</strong><span>${esc(t.resumen||'')}</span></button>`;
+  return `<button class="card ${main?'main':''}" data-id="${esc(t.id)}"><small>Quiz · ${esc(t.mes)} · ${esc(t.enfoque)}</small><strong>${esc(t.titulo)}</strong><span>${esc(t.resumen||'')}</span></button>`;
 }
 function home(){
   $('fam').textContent=FAMILIA;
@@ -19,13 +19,11 @@ function home(){
 }
 function openTema(id){
   tema=TEMAS.find(t=>t.id===id)||TEMAS[0];
-  $('t-meta').textContent=tema.mes+' · Enfoque: '+tema.enfoque;
+  $('t-meta').textContent='Quiz · '+tema.mes+' · Enfoque: '+tema.enfoque;
   $('t-titulo').textContent=tema.titulo;
   $('t-verso').textContent='«'+tema.versiculo+'»';
   $('t-ref').textContent=tema.referencia;
-  $('name').value=name;
-  const best=store.get('mejor_'+tema.id,null);
-  $('last').textContent=best?('Tu mejor resultado: '+best.pts+'/'+best.tot+(best.nombre?' · '+best.nombre:'')):'';
+  $('name').value='';
   show('s-tema');
 }
 function render(){
@@ -57,11 +55,10 @@ function finish(){
   const r=pts/tot;
   $('msg').textContent=pts===tot?'¡Perfecto! Estás firme en Él. 🍇':r>=.6?'¡Muy bien! Sigue permaneciendo en Él.':'Buen intento. Vuelvan a leer el pasaje en familia y jueguen otra vez.';
   $('endverse').innerHTML='«'+esc(tema.versiculo.length>170?tema.versiculo.slice(0,167).trim()+'…':tema.versiculo)+'» <b>'+esc(tema.referencia)+'</b>';
-  const best=store.get('mejor_'+tema.id,null);
-  if(!best||pts>=best.pts)store.set('mejor_'+tema.id,{pts,tot,nombre:name});
   show('s-end');
+  guardar(tema.id,name,pts,tot);
 }
-$('go').onclick=()=>{name=$('name').value.trim();store.set('nombre',name);i=0;pts=0;$('who').textContent=name;show('s-quiz');$('prog').style.width='0';render()};
+$('go').onclick=()=>{name=$('name').value.trim();if(!name){$('name').focus();$('name').placeholder='Escribe tu nombre para empezar';return}i=0;pts=0;$('who').textContent=name;show('s-quiz');$('prog').style.width='0';render()};
 $('name').addEventListener('keydown',e=>{if(e.key==='Enter')$('go').click()});
 $('hintbtn').onclick=()=>{$('hint').style.display='block';$('hintbtn').style.display='none'};
 $('next').onclick=()=>{if(i<tema.preguntas.length-1){i++;render()}else finish()};
@@ -73,4 +70,45 @@ $('share').onclick=async()=>{
   const data={title:'Altar Familiar · '+FAMILIA,text:'Juega el quiz "'+tema.titulo+'" del Altar Familiar ('+tema.referencia+')',url:location.href};
   try{if(navigator.share){await navigator.share(data)}else{await navigator.clipboard.writeText(location.href);$('share').textContent='¡Enlace copiado!'}}catch(e){}
 };
+
+/* ---------- Resultados guardados (Supabase) ---------- */
+const H=()=>({apikey:SUPA.key,Authorization:'Bearer '+SUPA.key,'Content-Type':'application/json'});
+const api=p=>SUPA.url+'/rest/v1/'+SUPA.tabla+p;
+async function guardar(id,nombre,puntos,total){
+  $('saved').textContent='Guardando tu resultado…';
+  try{
+    const r=await fetch(api(''),{method:'POST',headers:{...H(),Prefer:'return=minimal'},body:JSON.stringify({tema:id,nombre,puntos,total})});
+    $('saved').textContent=r.ok?'✓ Resultado guardado':'No se pudo guardar el resultado';
+  }catch(e){$('saved').textContent='No se pudo guardar (sin conexión)'}
+}
+function fecha(iso){
+  const d=new Date(iso),m=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  return d.getDate()+' '+m[d.getMonth()]+' · '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+}
+async function verResultados(){
+  $('r-meta').textContent='Resultados · '+tema.mes;
+  $('r-titulo').textContent=tema.titulo;
+  $('r-list').innerHTML='<p class="empty">Cargando…</p>';$('r-resum').textContent='';
+  show('s-res');
+  try{
+    const r=await fetch(api('?tema=eq.'+encodeURIComponent(tema.id)+'&select=nombre,puntos,total,creado&order=creado.desc&limit=200'),{headers:H()});
+    if(!r.ok)throw 0;
+    const rows=await r.json();
+    pintar(rows);
+  }catch(e){$('r-list').innerHTML='<p class="empty">No se pudieron cargar los resultados. Revisa tu conexión e inténtalo de nuevo.</p>'}
+}
+let cache=[];
+function pintar(rows){
+  if(rows)cache=rows;
+  const list=[...cache];
+  if(resMode==='top')list.sort((x,y)=>(y.puntos/y.total)-(x.puntos/x.total)||new Date(x.creado)-new Date(y.creado));
+  if(!list.length){$('r-resum').textContent='';$('r-list').innerHTML='<p class="empty">Todavía no hay resultados.<br>¡Sé el primero en jugar!</p>';return}
+  const prom=list.reduce((s,x)=>s+x.puntos/x.total,0)/list.length*100;
+  $('r-resum').textContent=list.length+(list.length===1?' participación':' participaciones')+' · promedio '+Math.round(prom)+'%';
+  $('r-list').innerHTML=list.map((x,k)=>`<div class="row"><span class="pos">${resMode==='top'?(k+1):'•'}</span><span class="nm">${esc(x.nombre)}<small>${fecha(x.creado)}</small></span><span class="sc">${x.puntos}<small>/${x.total}</small></span></div>`).join('');
+}
+$('verres1').onclick=verResultados;$('verres2').onclick=verResultados;
+$('back2').onclick=()=>openTema(tema.id);
+$('tab-rec').onclick=()=>{resMode='rec';$('tab-rec').classList.add('on');$('tab-top').classList.remove('on');pintar()};
+$('tab-top').onclick=()=>{resMode='top';$('tab-top').classList.add('on');$('tab-rec').classList.remove('on');pintar()};
 home();

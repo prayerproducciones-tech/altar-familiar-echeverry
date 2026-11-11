@@ -36,9 +36,9 @@
       <p class="kicker" id="t-meta"></p>
       <h1 class="h1s" id="t-titulo"></h1>
       <div class="verse2"><span id="t-verso"></span><b id="t-ref"></b></div>
-      <input id="name" type="text" placeholder="Tu nombre" maxlength="24" autocomplete="given-name">
+      <input id="name" type="text" placeholder="Pon tu nombre" maxlength="24" autocomplete="given-name">
       <button class="btn" id="go">Empezar el quiz</button>
-      <p class="last" id="last"></p>
+      <button class="btn ghost" id="verres1">Ver resultados</button>
     </div>
   </section>
 
@@ -62,9 +62,20 @@
       <p class="msg" id="msg"></p>
       <p class="verse" id="endverse"></p>
       <button class="btn" id="share">Compartir con la familia</button>
+      <p class="saved" id="saved"></p>
+      <button class="btn ghost" id="verres2">Ver resultados de la familia</button>
       <button class="btn ghost" id="again">Jugar de nuevo</button>
       <button class="btn ghost" id="home">Volver al inicio</button>
     </div>
+  </section>
+  <!-- RESULTADOS -->
+  <section id="s-res" class="screen">
+    <button class="back" id="back2">← Volver</button>
+    <p class="kicker" id="r-meta"></p>
+    <h1 class="h1s" id="r-titulo"></h1>
+    <div class="tabs"><button class="tab on" id="tab-rec">Recientes</button><button class="tab" id="tab-top">Mejores</button></div>
+    <p class="resum" id="r-resum"></p>
+    <div id="r-list"></div>
   </section>
   <p class="foot" id="foot"></p>
 </div>
