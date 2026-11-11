@@ -66,3 +66,6 @@ input:focus{border-color:var(--red)}
 .row .sc{font-family:'Anton',sans-serif;font-size:26px;color:var(--red)}
 .row .sc small{font-size:15px;color:var(--cream)}
 .empty{color:var(--muted);text-align:center;padding:28px 10px;line-height:1.5}
+
+.card .hq{display:inline-block;margin-top:12px;padding:7px 16px;border-radius:999px;background:#e62b1e;color:#fff;font:700 13px 'Inter',sans-serif;font-style:normal;letter-spacing:.5px}
+.card:not(.main) .hq{background:transparent;border:1.5px solid #e62b1e;color:#e62b1e}

@@ -6,7 +6,7 @@ let tema=null,i=0,pts=0,name='',done=false,resMode='rec';
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));$(id).classList.add('on');window.scrollTo(0,0)}
 
 function cardHTML(t,main){
-  return `<button class="card ${main?'main':''}" data-id="${esc(t.id)}"><small>Quiz · ${esc(t.mes)} · ${esc(t.enfoque)}</small><strong>${esc(t.titulo)}</strong><span>${esc(t.resumen||'')}</span></button>`;
+  return `<button class="card ${main?'main':''}" data-id="${esc(t.id)}"><small>Quiz · ${esc(t.mes)} · ${esc(t.enfoque)}</small><strong>${esc(t.titulo)}</strong><span>${esc(t.resumen||'')}</span><em class="hq">Hacer Quiz →</em></button>`;
 }
 function home(){
   $('fam').textContent=FAMILIA;
